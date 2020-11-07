@@ -5,6 +5,16 @@ import * as Yup from "yup";
 import Screen from "../components/Screen";
 import { Form, FormField, SubmitButton } from "../components/forms";
 
+//Firebase Thingss
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+// import firebaseConfig from "./../config/firebaseConfig";
+// firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+
+
+
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
@@ -16,7 +26,15 @@ function RegisterScreen() {
     <Screen style={styles.container}>
       <Form
         initialValues={{ name: "", email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => {
+          console.log(values)
+          firebase
+          .auth()
+          .createUserWithEmailAndPassword(values.email, values.password)
+          .then(user => console.log('register'))
+          .catch(error => console.log(error));
+      
+        }}
         validationSchema={validationSchema}
       >
         <FormField

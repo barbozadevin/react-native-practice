@@ -6,6 +6,13 @@ import colors from "../config/colors";
 import Icon from "../components/Icon";
 import Screen from "../components/Screen";
 
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import firebaseConfig from "./../config/firebaseConfig";
+// firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+import 'firebase/storage';  
+
 const menuItems = [
   {
     title: "My Listings",
@@ -24,13 +31,22 @@ const menuItems = [
   },
 ];
 
+
 function AccountScreen({navigation}) {
+  const { currentUser } = firebase.auth()
+   
+  var pathReference = firebase.storage().ref('profile/IMG_20170724_120038.jpg');
+  var img = pathReference.getDownloadURL();
+
+  console.log(img);
+  console.log(currentUser.email)
+  
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <ListItem
-          title="Mosh Hamedani"
-          subTitle="programmingwithmosh@gmail.com"
+          title={currentUser.email}
+          subTitle="ftaghdj"
           image={require("../assets/mosh.jpg")}
         />
       </View>

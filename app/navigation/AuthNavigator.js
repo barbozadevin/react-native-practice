@@ -5,6 +5,8 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 
+import AppNavigator from './AppNavigator';
+
 const Stack = createStackNavigator();
 
 const AuthNavigator = () => (
@@ -12,6 +14,7 @@ const AuthNavigator = () => (
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Login" component={LoginScreen}/>
         <Stack.Screen name="Register" component={RegisterScreen}/>
+        <Stack.Screen name="AppNavigator" component={AppNavigator}/>
     </Stack.Navigator>
 )
 
