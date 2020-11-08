@@ -42,7 +42,7 @@ const collectionwork = async(values, currentUser, url) =>{
     email: currentUser,
   };
   
-  await db.collection('Events').doc(currentUser).set(docData).then(console.log("Collection added"))
+  await db.collection('Events').add(docData).then(console.log("Collection added"))
 }
 
 const firebasework = async(values, currentUser, image) =>{
@@ -62,7 +62,7 @@ const validationSchema = Yup.object().shape({
 
 
 
-function ListingEditScreen() {
+function ListingEditScreen({navigation}) {
 
   //This is picker
   const [image, setImage] = useState(null);
@@ -102,13 +102,20 @@ function ListingEditScreen() {
           title: "",
           compensation: "",
           description: "",
-          category: null,
+          
         }}
-        onSubmit={async(values) => {
+        onSubmit={async(values,actions) => {
           
           console.log(values)
           const {currentUser} = await firebase.auth();
           await firebasework(values, currentUser.email,image);
+          values={
+            title: "",
+            compensation: "",
+            description: "", 
+          };
+          setImage();
+
         }}
         validationSchema={validationSchema}
       >
