@@ -1,6 +1,8 @@
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, {useEffect, useState} from "react";
+import { StyleSheet, Platform, Image } from "react-native";
 import * as Yup from "yup";
+import * as ImagePicker from 'expo-image-picker';
+import AppButton from '../components/Button';
 
 import {
   Form,
@@ -8,106 +10,122 @@ import {
   FormPicker as Picker,
   SubmitButton,
 } from "../components/forms";
-import CategoryPickerItem from "../components/CategoryPickerItem";
 import Screen from "../components/Screen";
 import FormImagePicker from "../components/forms/FormImagePicker";
 
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import 'firebase/storage';
+
+
+const db = firebase.firestore();
+
+uploadImage = async(uri, UserEmail, values) =>{
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  // const { currentUser } = firebase.auth();
+  var ref = firebase.storage().ref().child("events/"+UserEmail+"/image"+values.title);
+  await ref.put(blob);
+
+  const url = await ref.getDownloadURL().then(console.log("Got the URL")).catch((error)=>console.log(error));
+  console.log(url);
+  return url;
+}
+
+
+const collectionwork = async(values, currentUser, url) =>{
+  var docData = {
+    title: values.title,
+    compensation: values.compensation,
+    description: values.description,
+    url: url,
+    email: currentUser,
+  };
+  
+  await db.collection('Events').doc(currentUser).set(docData).then(console.log("Collection added"))
+}
+
+const firebasework = async(values, currentUser, image) =>{
+  
+  const url = await uploadImage(image, currentUser, values)
+  .then(console.log("Image Uploaded"))
+  .catch(error => console.log(error))
+
+  await collectionwork(values, currentUser, url);  
+  
+}
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
-  price: Yup.number().required().min(1).max(10000).label("Price"),
+  compensation: Yup.number().required().min(1).max(10000).label("Compensation"),
   description: Yup.string().label("Description"),
-  category: Yup.object().required().nullable().label("Category"),
-  images: Yup.array().min(1, "Please select atleast one image.")
 });
 
-const categories = [
-  {
-    backgroundColor: "#fc5c65",
-    icon: "floor-lamp",
-    label: "Furniture",
-    value: 1,
-  },
-  {
-    backgroundColor: "#fd9644",
-    icon: "car",
-    label: "Cars",
-    value: 2,
-  },
-  {
-    backgroundColor: "#fed330",
-    icon: "camera",
-    label: "Cameras",
-    value: 3,
-  },
-  {
-    backgroundColor: "#26de81",
-    icon: "cards",
-    label: "Games",
-    value: 4,
-  },
-  {
-    backgroundColor: "#2bcbba",
-    icon: "shoe-heel",
-    label: "Clothing",
-    value: 5,
-  },
-  {
-    backgroundColor: "#45aaf2",
-    icon: "basketball",
-    label: "Sports",
-    value: 6,
-  },
-  {
-    backgroundColor: "#4b7bec",
-    icon: "headphones",
-    label: "Movies & Music",
-    value: 7,
-  },
-  {
-    backgroundColor: "#a55eea",
-    icon: "book-open-variant",
-    label: "Books",
-    value: 8,
-  },
-  {
-    backgroundColor: "#778ca3",
-    icon: "application",
-    label: "Other",
-    value: 9,
-  },
-];
+
 
 function ListingEditScreen() {
+
+  //This is picker
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+  let result;
+  const pickImage = async () => {
+    result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  //This is end
+
   return (
     <Screen style={styles.container}>
       <Form
         initialValues={{
           title: "",
-          price: "",
+          compensation: "",
           description: "",
           category: null,
-          images: []
         }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={async(values) => {
+          
+          console.log(values)
+          const {currentUser} = await firebase.auth();
+          await firebasework(values, currentUser.email,image);
+        }}
         validationSchema={validationSchema}
       >
-        <FormImagePicker name="images"/>
+
+      <AppButton title="Event Image" onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+
         <FormField maxLength={255} name="title" placeholder="Title" />
+        
         <FormField
           keyboardType="numeric"
           maxLength={8}
-          name="price"
-          placeholder="Price"
-          width={120}
+          name="compensation"
+          placeholder="Compensation"
+          width={200}
         />
-        <Picker
-          items={categories}
-          name="category"
-          numberOfColumns={3}
-          PickerItemComponent={CategoryPickerItem}
-          placeholder="Category"
-          width="50%"
-        />
+
         <FormField
           maxLength={255}
           multiline
