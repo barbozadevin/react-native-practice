@@ -32,6 +32,14 @@ const menuItems = [
     },
     targetScreen: "Messages"
   },
+  {
+    title: "Create a Band",
+    icon: {
+      name: "email",
+      backgroundColor: colors.secondary,
+    },
+    targetScreen: "CreateBand"
+  },
 ];
 
 function getUser(currentUser){
@@ -103,6 +111,8 @@ function AccountScreen({navigation}) {
           )}
         />
       </View>
+ 
+
       <ListItem
         title="Log Out"
         IconComponent={<Icon name="logout" backgroundColor="#ffe66d" />}

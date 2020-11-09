@@ -6,16 +6,24 @@ import AccountNavigator from './AccountNavigator';
 import FeedNavigator from './FeedNavigator';
 import ListingEditScreen from '../screens/ListingEditScreen';
 import NewListingButton from './NewListingButton';
+import BandListingScreen from '../screens/BandListingScreen';
+import AllAccountsScreen from '../screens/AllAccountsScreen';
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => (
     <Tab.Navigator>
         <Tab.Screen 
-        name="Feed" 
+        name="Events" 
         component={FeedNavigator}
         options={{
-            tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="home" size={size} color={color}/>
+            tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="wunderlist" size={size} color={color}/>
+        }}/>
+        <Tab.Screen 
+        name="Bands" 
+        component={BandListingScreen}
+        options={{
+            tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="search-web" size={size} color={color}/>
         }}/>
         <Tab.Screen 
         name="ListingEdit" 
@@ -24,6 +32,12 @@ const AppNavigator = () => (
             tabBarButton: () => <NewListingButton onPress={() => navigation.navigate("ListingEdit")}/>,
             tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="plus-circle" size={size} color={color}/>
         })}/>
+        <Tab.Screen 
+        name="All Users" 
+        component={AllAccountsScreen}
+        options={{
+            tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="account-group" size={size} color={color}/>
+        }}/>
         <Tab.Screen 
         name="Account" 
         component={AccountNavigator}

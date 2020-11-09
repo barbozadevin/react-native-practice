@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, ScrollView, StyleSheet, SafeAreaView } from "react-native";
+import { FlatList, ScrollView, StyleSheet } from "react-native";
 
-import EventCard from "../components/EventCard";
+import BandCard from "../components/BandCard";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 import { LogBox } from 'react-native';
@@ -16,8 +16,8 @@ const db = firebase.firestore();
 
 
 
-function ListingsScreen({navigation}) {
-  const [events,setEvents] = useState([]);
+function BandListingsScreen({navigation}) {
+  const [bands,setBands] = useState([]);
 
 
   useEffect(() => {
@@ -27,19 +27,19 @@ function ListingsScreen({navigation}) {
   const li = [];
   var obj;
   const firebasework = async()=>{
-    await db.collection("Events").get().then(async function(querySnapshot) {
+    await db.collection("Bands").get().then(async function(querySnapshot) {
       await querySnapshot.forEach(async function(doc) {
           obj ={
             id: doc.id,
-            compensation: doc.data().compensation,
             description: doc.data().description,
-            title: doc.data().title,
+            bandname: doc.data().bandname,
             uri: doc.data().url,
-            email: doc.data().email,
-            location: doc.data().location
+            location: doc.data().location,
+            lookingfor: doc.data().lookingfor,
+            members: doc.data().members,
           }
           await li.push(obj);
-          setEvents(li);
+          setBands(li);
           
       });
       console.log(li);
@@ -56,16 +56,15 @@ function ListingsScreen({navigation}) {
     <ScrollView>
     <Screen style={styles.screen}>
       <FlatList
-        data={events}
-        keyExtractor={(events) => events.id.toString()}
+        data={bands}
+        keyExtractor={(bands) => bands.id.toString()}
         renderItem={({ item }) => (
-          <EventCard
-            title={item.title}
-            subTitle={"₹" + item.compensation}
+          <BandCard
+            title={item.bandname}
             location={item.location}
-            email={item.email}
             image={{uri:item.uri}}
-            onPress={() => navigation.navigate("ListingDetails", item)}
+            lookingfor = {item.lookingfor}
+            onPress={() => navigation.navigate("BandDetails", item)}
           />
         )}
       />
@@ -82,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListingsScreen;
+export default BandListingsScreen;

@@ -1,24 +1,43 @@
-import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import React, {useEffect} from "react";
+import { View, Image, StyleSheet, FlatList, LogBox } from "react-native";
 
 import colors from "../config/colors";
-import ListItem from "../components/lists/ListItem";
+import { MemberItem, ListItemSeparator } from "../components/lists";
+
 import Text from "../components/Text";
 import Icon from "../components/Icon";
 
-function ListingDetailsScreen({route}) {
+function BandDetailsScreen({route}) {
   const listing = route.params;
-
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists: missing keys for items']);
+}, [])
   return (
     <View>
       <Image style={styles.image} source={{uri:listing.uri}} />
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{listing.title}</Text>
-        <Text style={styles.price}>₹{listing.compensation}</Text>
-        
+        <Text style={styles.title}>{listing.bandname}</Text>
         <Text style={styles.location}><Icon backgroundColor={colors.secondary} name={"google-maps"} style={styles.icon} size={25}/> {listing.location}</Text>
         <Text style={styles.details}><Icon backgroundColor={colors.blue} name={"card-text-outline"} style={styles.icon} size={25}/> {listing.description}</Text>
-        <Text style={styles.contact}><Icon name={"email"} style={styles.icon} size={25}/> {listing.email}</Text>        
+
+        <FlatList
+            data = {listing.members}
+            ItemSeparatorComponent={ListItemSeparator}
+            keyExtractor={(item, index) => 'key'+index}
+            renderItem = {({item}) => (
+                <MemberItem
+                    title={item}
+                    
+                    IconComponent={
+                        <Icon
+                          name="account-box"
+                        />
+                      }
+                      
+                />
+                
+            )}
+        />
       </View> 
     </View>
   );
@@ -64,4 +83,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ListingDetailsScreen;
+export default BandDetailsScreen;

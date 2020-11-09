@@ -23,47 +23,48 @@ uploadImage = async(uri, UserEmail, values) =>{
   const response = await fetch(uri);
   const blob = await response.blob();
   // const { currentUser } = firebase.auth();
-  var ref = firebase.storage().ref().child("events/"+UserEmail+"/image"+values.title);
+  var ref = firebase.storage().ref().child("bands/"+UserEmail+"/image"+values.bandname);
   await ref.put(blob);
-
   const url = await ref.getDownloadURL().then(console.log("Got the URL")).catch((error)=>console.log(error));
-  
+  console.log(url);
   return url;
 }
 
 
 const collectionwork = async(values, currentUser, url) =>{
-  var docData = {
-    title: values.title,
-    compensation: values.compensation,
+    var arr = [];
+    arr = values.members.split(",");
+    var docData = {
+    bandname: values.bandname,
+    location: values.location,
     description: values.description,
     url: url,
-    email: currentUser,
-    location: values.location,
+    members: arr,
+    lookingfor: values.lookingfor,
+    creator: currentUser
   };
   
-  await db.collection('Events').add(docData).then()
+  await db.collection('Bands').add(docData).then(console.log("Collection added"))
 }
 
 const firebasework = async(values, currentUser, image) =>{
   
   const url = await uploadImage(image, currentUser, values)
-  .then()
+  .then(console.log("Image Uploaded"))
   .catch(error => console.log(error))
 
   await collectionwork(values, currentUser, url);  
   
 }
 const validationSchema = Yup.object().shape({
-  title: Yup.string().required().min(1).label("Title"),
-  compensation: Yup.number().required().min(1).max(10000).label("Compensation"),
-  description: Yup.string().label("Description"),
-  location: Yup.string().required().label("String")
+  bandname: Yup.string().required().min(1).label("Title"),
+  location: Yup.string().required().min(1).label("Location"),
+  description: Yup.string().required().label("Description"),
+  lookingfor: Yup.string().required().label("LookingFor"),
+  members: Yup.string().required().label("Members"),
 });
 
-
-
-function ListingEditScreen({navigation}) {
+function CreateBand({navigation}) {
 
   //This is picker
   const [image, setImage] = useState(null);
@@ -97,18 +98,19 @@ function ListingEditScreen({navigation}) {
   //This is end
 
   return (
-    <ScrollView>
+      <ScrollView>
     <Screen style={styles.container}>
       <Form
         initialValues={{
-          title: "",
-          compensation: "",
-          description: "",
-          location: "",
-          
+            bandname: "",
+            location: "",
+            description: "",
+            lookingfor: "",
+            members: "",
         }}
         onSubmit={async(values) => {
           
+          console.log(values)
           const {currentUser} = await firebase.auth();
           await firebasework(values, currentUser.email,image);
           setImage();
@@ -117,27 +119,33 @@ function ListingEditScreen({navigation}) {
         validationSchema={validationSchema}
       >
 
-      <AppButton title="Event Image" onPress={pickImage} />
+      <AppButton title="Band Image" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
 
-        <FormField maxLength={255} name="title" placeholder="Title" />
-
+        <FormField maxLength={255} name="bandname" placeholder="Band Name" />
         <FormField maxLength={30} name="location" placeholder="Location" />
+        
 
         <FormField
-          keyboardType="numeric"
-          maxLength={8}
-          name="compensation"
-          placeholder="Compensation"
-          width={200}
-        />
-
-        <FormField
-          maxLength={255}
+          maxLength={300}
           multiline
           name="description"
-          numberOfLines={3}
+          numberOfLines={5}
           placeholder="Description"
+        />
+        <FormField
+          maxLength={140}
+          multiline
+          name="lookingfor"
+          numberOfLines={2}
+          placeholder="Roles to be filled..."
+        />
+        <FormField
+          maxLength={140}
+          multiline
+          name="members"
+          numberOfLines={5}
+          placeholder="Enter Member Names sperated by a ' , '"
         />
         <SubmitButton title="Post" />
       </Form>
@@ -151,4 +159,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-export default ListingEditScreen;
+export default CreateBand;
