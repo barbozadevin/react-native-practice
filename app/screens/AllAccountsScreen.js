@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { View, Image, StyleSheet, FlatList, LogBox } from "react-native";
 
 import colors from "../config/colors";
-import { MemberItem, ListItemSeparator } from "../components/lists";
+import { MemberItem as AllMemberDetail, ListItemSeparator } from "../components/lists";
 
 import Text from "../components/Text";
 import Icon from "../components/Icon";
@@ -36,7 +36,7 @@ function BandDetailsScreen() {
               ItemSeparatorComponent={ListItemSeparator}
               keyExtractor={(item, index) => 'key'+index}
               renderItem = {({item}) => (
-                  <MemberItem
+                  <AllMemberDetail
                       title={item}
                       
                       IconComponent={

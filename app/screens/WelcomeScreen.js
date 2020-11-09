@@ -11,8 +11,8 @@ function WelcomeScreen({navigation}) {
       source={require("../assets/background.jpg")}
     >
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require("../assets/logo-red.png")} />
-        <Text style={styles.tagline}>Sell What You Don't Need</Text>
+        <Image style={styles.logo} source={require("../assets/logo-new.png")} />
+        <Text style={styles.tagline}>Find Your Dream Gigs</Text>
       </View>
       <View style={styles.buttonsContainer}>
         <Button title="Login" onPress={() => navigation.navigate("Login")}/>
@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: "100%",
+    height: "100%",
   },
   logoContainer: {
     position: "absolute",

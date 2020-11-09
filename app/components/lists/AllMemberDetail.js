@@ -6,7 +6,7 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import Text from "../Text";
 import colors from "../../config/colors";
 
-function MemberItem({
+function AllMemberDetail({
   title,
   subTitle,
   image,
@@ -15,7 +15,7 @@ function MemberItem({
   renderRightActions,
 }) {
   return (
-        <View style={styles.container}>
+        <View style={styles.container} onPress={onPress}>
           {IconComponent}
           {image && <Image style={styles.image}  source={{uri: image}} />}
           <View style={styles.detailsContainer}>
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MemberItem;
+export default AllMemberDetail;

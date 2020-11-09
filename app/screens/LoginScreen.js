@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
 function LoginScreen({navigation}) {
   return (
     <Screen style={styles.container}>
-      <Image style={styles.logo} source={require("../assets/logo-red.png")} />
+      <Image style={styles.logo} source={require("../assets/logo-new.png")} />
 
       <Form
         initialValues={{ email: "", password: "" }}
@@ -62,11 +62,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: 80,
+    width: 270,
     height: 80,
     alignSelf: "center",
     marginTop: 50,
-    marginBottom: 20,
+    marginBottom: 50,
   },
 });
 

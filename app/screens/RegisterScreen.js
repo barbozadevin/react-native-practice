@@ -17,7 +17,8 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
-  
+  location: Yup.string().required().label("Location"),
+  specialization: Yup.string().required().label("Specialization")
 });
 
 function RegisterScreen({navigation}) {
@@ -59,25 +60,38 @@ function RegisterScreen({navigation}) {
     const response = await fetch(uri);
     const blob = await response.blob();
     // const { currentUser } = firebase.auth();
-    var ref = firebase.storage().ref().child("profile/"+UserEmail+"/image");
-    ref.put(blob);
+    var ref = await firebase.storage().ref().child("profile/"+UserEmail+"/image");
+    await ref.put(blob);
+    return ref.getDownloadURL().then(console.log("Got the URL")).catch((error)=>console.log(error));
   }
   const firebasework = async(values) =>{
-    var docData = {
-      email: values.email,
-      name: values.name
-    };
+    
     await firebase
     .auth()
     .createUserWithEmailAndPassword(values.email, values.password)
     .then(user => console.log('register'))
     .catch(error => console.log(error));
 
-    await db.collection('Authenticated').doc(values.email).set(docData).then(console.log("Collection added"))
-    uploadImage(image, values.email)
+    const uri = await uploadImage(image, values.email)
     .then(console.log("Image Uploaded"))
     .catch(error => console.log(error))
+
+    var docData = {
+      email: values.email,
+      name: values.name,
+      uri: uri,
+      location: values.location,
+      specialization: values.specialization
+    };
+
+    await db.collection('Authenticated').doc(values.email).set(docData).then(console.log("Collection added"))
+    
+
+
   }
+
+
+
   return (
     <Screen style={styles.container}>
       <Form
@@ -85,7 +99,8 @@ function RegisterScreen({navigation}) {
           name: "", 
           email: "", 
           password: "",
-          images: []
+          location: "",
+          specialization: "",
 
         }}
         onSubmit={(values) => {
@@ -111,6 +126,18 @@ function RegisterScreen({navigation}) {
           name="email"
           placeholder="Email"
           textContentType="emailAddress"
+        />
+          <FormField
+          autoCorrect={false}
+          icon="google-maps"
+          name="location"
+          placeholder="Location"
+        />
+        <FormField
+          autoCorrect={false}
+          icon="star-circle-outline"
+          name="specialization"
+          placeholder="Specialization"
         />
 
       <AppButton title="Profile Picture" onPress={pickImage} />

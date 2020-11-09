@@ -9,13 +9,9 @@ import Screen from "../components/Screen";
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import firebaseConfig from "./../config/firebaseConfig";  
-// firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 import 'firebase/storage';  
-// var pathReference = firebase.storage().ref('profile/IMG_20170724_120038.jpg')
-// var img = pathReference.getDownloadURL();
-// console.log(img);
+
 const menuItems = [
   {
     title: "My Listings",
@@ -25,17 +21,9 @@ const menuItems = [
     },
   },
   {
-    title: "My Messages",
-    icon: {
-      name: "email",
-      backgroundColor: colors.secondary,
-    },
-    targetScreen: "Messages"
-  },
-  {
     title: "Create a Band",
     icon: {
-      name: "email",
+      name: "shape-circle-plus",
       backgroundColor: colors.secondary,
     },
     targetScreen: "CreateBand"
