@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from "react";
-import { StyleSheet, Platform, Image } from "react-native";
+import { StyleSheet, Platform, Image, ScrollView } from "react-native";
 import * as Yup from "yup";
 import Screen from "../components/Screen";
 import { Form, FormField, SubmitButton } from "../components/forms";
@@ -18,7 +18,8 @@ const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
   location: Yup.string().required().label("Location"),
-  specialization: Yup.string().required().label("Specialization")
+  specialization: Yup.string().required().label("Specialization"),
+  bio : Yup.string().required().label("bio")
 });
 
 function RegisterScreen({navigation}) {
@@ -81,7 +82,8 @@ function RegisterScreen({navigation}) {
       name: values.name,
       uri: uri,
       location: values.location,
-      specialization: values.specialization
+      specialization: values.specialization,
+      bio: values.bio
     };
 
     await db.collection('Authenticated').doc(values.email).set(docData).then(console.log("Collection added"))
@@ -93,6 +95,7 @@ function RegisterScreen({navigation}) {
 
 
   return (
+    <ScrollView>
     <Screen style={styles.container}>
       <Form
         initialValues={{ 
@@ -101,7 +104,7 @@ function RegisterScreen({navigation}) {
           password: "",
           location: "",
           specialization: "",
-
+          bio: ""
         }}
         onSubmit={(values) => {
           firebasework(values);
@@ -127,6 +130,15 @@ function RegisterScreen({navigation}) {
           placeholder="Email"
           textContentType="emailAddress"
         />
+
+        <FormField
+          autoCorrect={false}
+          maxLength={255}
+          icon="account-card-details"
+          name="bio"
+          placeholder="Add your bio.."
+        />
+
           <FormField
           autoCorrect={false}
           icon="google-maps"
@@ -155,6 +167,7 @@ function RegisterScreen({navigation}) {
         <SubmitButton title="Register" />
       </Form>
     </Screen>
+    </ScrollView>
   );
 }
 

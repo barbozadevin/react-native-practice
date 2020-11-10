@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { View, Image, StyleSheet, FlatList, LogBox } from "react-native";
 
 import colors from "../config/colors";
-import { MemberItem as AllMemberDetail, ListItemSeparator } from "../components/lists";
+import { ListItem, ListItemSeparator } from "../components/lists";
 
 import Text from "../components/Text";
 import Icon from "../components/Icon";
@@ -20,7 +20,7 @@ function BandDetailsScreen() {
     const firebasework = async() =>{
         await db.collection("Authenticated").get().then(async function(querySnapshot) {
             await querySnapshot.forEach(async function(doc) {
-                await arr.push(doc.id);
+                await arr.push(doc.data());
             })
             setUsers(arr);
         })
@@ -34,16 +34,13 @@ function BandDetailsScreen() {
           <FlatList
               data = {users}
               ItemSeparatorComponent={ListItemSeparator}
-              keyExtractor={(item, index) => 'key'+index}
+              keyExtractor={users.email}
               renderItem = {({item}) => (
-                  <AllMemberDetail
-                      title={item}
+                  <ListItem
+                      title={item.name}
+                      subTitle={item.email}
+                      image={item.uri}
                       
-                      IconComponent={
-                          <Icon
-                            name="account-box"
-                          />
-                        }
                         
                   />
                   
