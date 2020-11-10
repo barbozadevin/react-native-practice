@@ -7,7 +7,7 @@ import FeedNavigator from './FeedNavigator';
 import ListingEditScreen from '../screens/ListingEditScreen';
 import NewListingButton from './NewListingButton';
 import BandListingScreen from '../screens/BandListingScreen';
-import AllAccountsScreen from '../screens/AllAccountsScreen';
+import AllUsersNavigator from './AllUsersNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +34,7 @@ const AppNavigator = () => (
         })}/>
         <Tab.Screen 
         name="All Users" 
-        component={AllAccountsScreen}
+        component={AllUsersNavigator}
         options={{
             tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="account-group" size={size} color={color}/>
         }}/>

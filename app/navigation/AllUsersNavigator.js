@@ -9,14 +9,10 @@ const Stack = createStackNavigator();
 function AllUsersNavigator(props) {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Account" component={AllAccountsScreen}/>
-            <Stack.Screen name="PersonDetails" component={PersonDetailsScreen}/>
+            <Stack.Screen name="Account" component={AllAccountsScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="PersonDetails" component={PersonDetailsScreen} options={{headerShown: false}}/>
         </Stack.Navigator>
     );
 }
-
-const styles = StyleSheet.create({
-    container:{}
-})
 
 export default AllUsersNavigator;

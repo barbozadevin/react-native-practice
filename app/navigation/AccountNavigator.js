@@ -8,9 +8,9 @@ import CreateBand from '../screens/CreateBand';
 const Stack = createStackNavigator();
 
 const AccountNavigator = () => (
-    <Stack.Navigator>
-        <Stack.Screen name="Account" component={AccountScreen}/>
-        <Stack.Screen name = "CreateBand" component={CreateBand}/>
+    <Stack.Navigator >
+        <Stack.Screen name="Account" component={AccountScreen} options={{headerShown: false}}/>
+        <Stack.Screen name = "CreateBand" component={CreateBand} options={{headerShown: false}}/>
     </Stack.Navigator>
 )
 

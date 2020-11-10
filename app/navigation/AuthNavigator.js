@@ -12,9 +12,9 @@ const Stack = createStackNavigator();
 const AuthNavigator = () => (
     <Stack.Navigator>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Login" component={LoginScreen}/>
-        <Stack.Screen name="Register" component={RegisterScreen}/>
-        <Stack.Screen name="AppNavigator" component={AppNavigator}/>
+        <Stack.Screen name="Login" component={LoginScreen}options={{headerShown: false}}/>
+        <Stack.Screen name="Register" component={RegisterScreen}options={{headerShown: false}}/>
+        <Stack.Screen name="AppNavigator" component={AppNavigator}options={{headerShown: false}}/>
     </Stack.Navigator>
 )
 

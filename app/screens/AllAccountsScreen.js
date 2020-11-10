@@ -14,7 +14,7 @@ import 'firebase/storage';
 
 const db = firebase.firestore();
 
-function BandDetailsScreen() {
+function AllAccountsScreen({navigation}) {
     const [users, setUsers] = useState();
     var arr =[];
     const firebasework = async() =>{
@@ -34,13 +34,13 @@ function BandDetailsScreen() {
           <FlatList
               data = {users}
               ItemSeparatorComponent={ListItemSeparator}
-              keyExtractor={users.email}
+              keyExtractor={(Item) => Item.email}
               renderItem = {({item}) => (
                   <ListItem
                       title={item.name}
                       subTitle={item.email}
                       image={item.uri}
-                      
+                      onPress={() => navigation.navigate("PersonDetails", item)}
                         
                   />
                   
@@ -90,5 +90,5 @@ function BandDetailsScreen() {
     }
   });
   
-  export default BandDetailsScreen;
+  export default AllAccountsScreen;
   
