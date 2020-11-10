@@ -113,7 +113,7 @@ function CreateBand({navigation}) {
           console.log(values)
           const {currentUser} = await firebase.auth();
           await firebasework(values, currentUser.email,image);
-          setImage();
+          navigation.navigate("Account");
 
         }}
         validationSchema={validationSchema}

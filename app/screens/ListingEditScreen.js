@@ -111,7 +111,7 @@ function ListingEditScreen({navigation}) {
           
           const {currentUser} = await firebase.auth();
           await firebasework(values, currentUser.email,image);
-          setImage();
+          navigation.navigate("Events");
 
         }}
         validationSchema={validationSchema}

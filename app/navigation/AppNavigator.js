@@ -8,6 +8,7 @@ import ListingEditScreen from '../screens/ListingEditScreen';
 import NewListingButton from './NewListingButton';
 import BandListingScreen from '../screens/BandListingScreen';
 import AllUsersNavigator from './AllUsersNavigator';
+import ListingEditNavigator from './ListingEditNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +28,7 @@ const AppNavigator = () => (
         }}/>
         <Tab.Screen 
         name="ListingEdit" 
-        component={ListingEditScreen}
+        component={ListingEditNavigator}
         options={({navigation}) => ({
             tabBarButton: () => <NewListingButton onPress={() => navigation.navigate("ListingEdit")}/>,
             tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="plus-circle" size={size} color={color}/>
