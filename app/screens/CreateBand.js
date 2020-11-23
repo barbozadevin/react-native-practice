@@ -23,10 +23,10 @@ uploadImage = async(uri, UserEmail, values) =>{
   const response = await fetch(uri);
   const blob = await response.blob();
   // const { currentUser } = firebase.auth();
-  var ref = firebase.storage().ref().child("bands/"+UserEmail+"/image"+values.bandname);
+  var ref = firebase.storage().ref().child("bands/"+UserEmail+"/image"+Math.random()+values.bandname);
   await ref.put(blob);
-  const url = await ref.getDownloadURL().then(console.log("Got the URL")).catch((error)=>console.log(error));
-  console.log(url);
+  const url = await ref.getDownloadURL().catch((error)=>console.log(error));
+  
   return url;
 }
 
@@ -44,13 +44,12 @@ const collectionwork = async(values, currentUser, url) =>{
     creator: currentUser
   };
   
-  await db.collection('Bands').add(docData).then(console.log("Collection added"))
+  await db.collection('Bands').add(docData).catch(err=>console.log(err));
 }
 
 const firebasework = async(values, currentUser, image) =>{
   
   const url = await uploadImage(image, currentUser, values)
-  .then(console.log("Image Uploaded"))
   .catch(error => console.log(error))
 
   await collectionwork(values, currentUser, url);  
@@ -88,7 +87,6 @@ function CreateBand({navigation}) {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -110,7 +108,7 @@ function CreateBand({navigation}) {
         }}
         onSubmit={async(values) => {
           
-          console.log(values)
+
           const {currentUser} = await firebase.auth();
           await firebasework(values, currentUser.email,image);
           navigation.navigate("Account");
@@ -120,7 +118,7 @@ function CreateBand({navigation}) {
       >
 
       <AppButton title="Band Image" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf: "center" }} />}
 
         <FormField maxLength={255} name="bandname" placeholder="Band Name" />
         <FormField maxLength={30} name="location" placeholder="Location" />

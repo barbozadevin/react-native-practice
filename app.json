@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "course-2",
-    "slug": "course-2",
+    "name": "MCC Project",
+    "slug": "mcc-project",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "This is our final MCC Project",
+    "githubUrl": "https://github.com/barbozadevin/react-native-practice"
   }
 }

@@ -4,8 +4,6 @@ import { View, Image, StyleSheet, FlatList, LogBox } from "react-native";
 import colors from "../config/colors";
 import { ListItem, ListItemSeparator } from "../components/lists";
 
-import Text from "../components/Text";
-import Icon from "../components/Icon";
 
 //Firebase imports
 import * as firebase from 'firebase';
@@ -24,7 +22,6 @@ function AllAccountsScreen({navigation}) {
             })
             setUsers(arr);
         })
-        console.log(users);
     }
     useEffect(() => {
         firebasework();
@@ -53,6 +50,7 @@ function AllAccountsScreen({navigation}) {
   const styles = StyleSheet.create({
     detailsContainer: {
       padding: 20,
+      top: 50
     },
     image: {
       width: "100%",

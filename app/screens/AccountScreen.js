@@ -19,6 +19,7 @@ const menuItems = [
       name: "format-list-bulleted",
       backgroundColor: colors.primary,
     },
+    targetScreen: "MyListingScreen"
   },
   {
     title: "Create a Band",
@@ -30,11 +31,6 @@ const menuItems = [
   },
 ];
 
-function getUser(currentUser){
-  db.collection('Authenticated').doc(currentUser).get().then((user) =>{
-    console.log(user.data());
-  })
-}
 
 function AccountScreen({navigation}) {
   const { currentUser } = firebase.auth();
@@ -48,25 +44,14 @@ function AccountScreen({navigation}) {
     const docRef = db.collection('Authenticated').doc(currentUser.email);
     
     await docRef.get().then( async(doc) =>{
-      if(doc.exists)  {
         setUser(doc.data().name);
-      }
-      
-      else
-      console.log("Bleh");
-      }
-    ).catch((error) => console.log(error));
+        setURL(doc.data().uri);
+    }).catch((error) => console.log(error));
   }
 
-  const getImage = () =>{
-    var pathReference = firebase.storage().ref('profile/'+currentUser.email+'/image')
-    pathReference.getDownloadURL().then((uri) => {
-      setURL(uri);
-    });
-  }
+  
   
   useEffect(() => {
-    getImage();
     getUsername();
   },[]);
 
@@ -94,7 +79,7 @@ function AccountScreen({navigation}) {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
-              onPress={() => navigation.navigate(item.targetScreen)}
+              onPress={() => navigation.navigate(item.targetScreen, currentUser.email)}
             />
           )}
         />

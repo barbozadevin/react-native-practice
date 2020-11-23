@@ -47,7 +47,7 @@ function RegisterScreen({navigation}) {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -61,7 +61,7 @@ function RegisterScreen({navigation}) {
     const response = await fetch(uri);
     const blob = await response.blob();
     // const { currentUser } = firebase.auth();
-    var ref = await firebase.storage().ref().child("profile/"+UserEmail+"/image");
+    var ref = await firebase.storage().ref().child("profile/"+UserEmail+"/image"+Math.random());
     await ref.put(blob);
     return ref.getDownloadURL().then(console.log("Got the URL")).catch((error)=>console.log(error));
   }
@@ -153,7 +153,7 @@ function RegisterScreen({navigation}) {
         />
 
       <AppButton title="Profile Picture" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf:"center" }} />}
 
         <FormField
           autoCapitalize="none"

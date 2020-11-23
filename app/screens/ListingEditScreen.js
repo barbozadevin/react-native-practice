@@ -23,10 +23,10 @@ uploadImage = async(uri, UserEmail, values) =>{
   const response = await fetch(uri);
   const blob = await response.blob();
   // const { currentUser } = firebase.auth();
-  var ref = firebase.storage().ref().child("events/"+UserEmail+"/image"+values.title);
+  var ref = firebase.storage().ref().child("events/"+UserEmail+"/image"+Math.random()+values.title);
   await ref.put(blob);
 
-  const url = await ref.getDownloadURL().then(console.log("Got the URL")).catch((error)=>console.log(error));
+  const url = await ref.getDownloadURL().catch((error)=>console.log(error));
   
   return url;
 }
@@ -87,7 +87,7 @@ function ListingEditScreen({navigation}) {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -118,7 +118,7 @@ function ListingEditScreen({navigation}) {
       >
 
       <AppButton title="Event Image" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf:"center" }} />}
 
         <FormField maxLength={255} name="title" placeholder="Title" />
 

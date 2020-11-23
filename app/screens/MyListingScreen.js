@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, ScrollView, StyleSheet } from "react-native";
+import { FlatList, ScrollView, StyleSheet, SafeAreaView } from "react-native";
 
-import BandCard from "../components/BandCard";
+import EventCard from "../components/EventCard";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 import { LogBox } from 'react-native';
@@ -16,10 +16,9 @@ const db = firebase.firestore();
 
 
 
-function BandListingsScreen({navigation}) {
-  const [bands,setBands] = useState([]);
-
-
+function MyListingScreen({navigation, route}) {
+  const [events,setEvents] = useState([]);
+    const user = route.params;
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 }, [])
@@ -27,21 +26,22 @@ function BandListingsScreen({navigation}) {
   const li = [];
   var obj;
   const firebasework = async()=>{
-    await db.collection("Bands").get().then(async function(querySnapshot) {
+    await db.collection("Events").where("email", "==", user).get().then(async function(querySnapshot) {
       await querySnapshot.forEach(async function(doc) {
           obj ={
             id: doc.id,
+            compensation: doc.data().compensation,
             description: doc.data().description,
-            bandname: doc.data().bandname,
+            title: doc.data().title,
             uri: doc.data().url,
-            location: doc.data().location,
-            lookingfor: doc.data().lookingfor,
-            members: doc.data().members,
+            email: doc.data().email,
+            location: doc.data().location
           }
           await li.push(obj);
-          setBands(li);
+          setEvents(li);
           
       });
+
   });
   
   }
@@ -55,15 +55,16 @@ function BandListingsScreen({navigation}) {
     <ScrollView>
     <Screen style={styles.screen}>
       <FlatList
-        data={bands}
-        keyExtractor={(bands) => bands.id.toString()}
+        data={events}
+        keyExtractor={(events) => events.id.toString()}
         renderItem={({ item }) => (
-          <BandCard
-            title={item.bandname}
+          <EventCard
+            title={item.title}
+            subTitle={"₹" + item.compensation}
             location={item.location}
+            email={item.email}
             image={{uri:item.uri}}
-            lookingfor = {item.lookingfor}
-            onPress={() => navigation.navigate("BandDetails", item)}
+            onPress={() => navigation.navigate("ListingDetails", item)}
           />
         )}
       />
@@ -81,4 +82,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BandListingsScreen;
+export default MyListingScreen;

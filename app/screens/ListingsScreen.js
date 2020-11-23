@@ -42,7 +42,7 @@ function ListingsScreen({navigation}) {
           setEvents(li);
           
       });
-      console.log(li);
+
   });
   
   }
@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: colors.light,
     flex: 1,
+    top: 20
   },
 });
 
